@@ -16,17 +16,27 @@ def create_app(test_config=None):
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
-
+  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
   '''
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
-
+  @app.after_request
+  
+  def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Headers', 'GET, POST, PATCH, DELETE, OPTION')
+    return response
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
-
+  @app.route('/categories')
+  def categories():
+    return jsonify({
+      'success' : True,
+      'categories': theCategories()
+    })
 
   '''
   @TODO: 
@@ -35,12 +45,43 @@ def create_app(test_config=None):
   This endpoint should return a list of questions, 
   number of total questions, current category, categories. 
 
+
   TEST: At this point, when you start the application
   you should see questions and categories generated,
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   '''
+  def paginate_questions(request, selection):
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
 
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
+
+    return current_questions
+
+    '''Function to get the categories '''
+  
+  def theCategories():
+    categories = {}
+    for category in Category.query.all():
+      categories[category.id] = category.type
+    
+    return categories
+
+  @app.route('/questions')
+  def get_questions():
+    all_questions = Question.query.all()
+    current_questions = paginate_questions(request, all_questions)
+
+    return jsonify({
+      'success': True,
+      'questions': current_questions,
+      'total_questions': len(all_questions),
+      'categories': theCategories(),
+      'current_category': None
+    })
   '''
   @TODO: 
   Create an endpoint to DELETE question using a question ID. 
@@ -48,6 +89,27 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
+  @app.route('/questions/<int:question_id>', methods=['DELETE'])
+  def delete_question(question_id):
+    try:
+      question = Question.query.filter(Question.id == question_id).one_or_none()
+
+      if question is None:
+        abort(404)
+
+      question.delete()
+      all_questions = Question.query.all()
+
+      current_questions = paginate_questions(request, all_questions)
+
+      return jsonify({
+        'success': True,
+        'deleted': question_id,
+        'questions': current_questions,
+        'total_questions': len(all_questions)
+      })
+    except:
+      abort(422)
 
   '''
   @TODO: 
@@ -59,6 +121,35 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
+
+  @app.route('/add', methods=['POST'])
+  def add_question():
+
+    body = request.get_json()
+    
+    try:
+      new_question = body.get('question')
+      new_answer = body.get('answer')
+      new_category = body.get('category')
+      new_difficulty = body.get('difficulty')
+
+      question = Question(question=new_question, answer=new_answer, category=new_category, difficulty=new_difficulty)
+      
+      question.insert()
+
+      all_questions = Question.query.all()
+
+      current_questions = paginate_questions(request, all_questions)
+
+      return jsonify({
+        'success': True,
+        'created': question_id,
+        'questions': current_questions,
+        'total_questions': len(all_questions)
+      })
+    
+    except:
+      abort(422)
 
   '''
   @TODO: 
@@ -79,6 +170,7 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
+
 
 
   '''
