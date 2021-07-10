@@ -16,7 +16,7 @@ def create_app(test_config=None):
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
-  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+  cors = CORS(app, resources={"*": {"origins": "*"}})
   '''
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
@@ -122,7 +122,7 @@ def create_app(test_config=None):
   of the questions list in the "List" tab.  
   '''
 
-  @app.route('/add', methods=['POST'])
+  @app.route('/add', methods=['GET','POST'])
   def add_question():
 
     body = request.get_json()
@@ -143,12 +143,16 @@ def create_app(test_config=None):
 
       return jsonify({
         'success': True,
-        'created': question_id,
-        'questions': current_questions,
-        'total_questions': len(all_questions)
+        'question': new_question,
+        'answer': new_answer,
+        'category': new_category,
+        'difficulty': new_difficulty
       })
-    
-    except:
+
+    except Exception as e:
+ 
+      print('Exception is >> ',e )
+ 
       abort(422)
 
   '''
@@ -160,7 +164,38 @@ def create_app(test_config=None):
   TEST: Search by any phrase. The questions list will update to include 
   only question that include that string within their question. 
   Try using the word "title" to start. 
-  '''
+
+'''
+
+  @app.route('/search', methods=['POST'])
+
+  def search_question():
+  
+    body = request.get_json()
+  
+    try:
+    
+      search_term = body.get('searchTerm') 
+
+      returning_search_term = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+
+      format_these_questions = paginate_questions(request, returning_search_term)
+
+      return jsonify({
+        'status': True,
+        'questions': format_these_questions,
+        'total_questions': len(Question.query.all()),
+        'current_category': None
+      })
+    
+    except Exception as e:
+    
+      print('Exception is >> ',e )
+    
+      abort(422)
+
+
+
 
   '''
   @TODO: 
@@ -171,6 +206,28 @@ def create_app(test_config=None):
   category to be shown. 
   '''
 
+  @app.route('/categories/<int:id>/questions')
+  def getByCategory(id):
+
+    try:
+      
+      this_category = Category.query.filter_by(id=id).one_or_none()
+      
+      questions = Question.query.filter_by(category = str(id)).all()
+      
+      format_these_questions = paginate_questions(request, questions)
+
+      return jsonify({
+        'status': True,
+        'questions': format_these_questions,
+        'total_questions': len(questions),
+        'current_category': this_category.type
+      })
+    except Exception as e:
+    
+      print('Exception is >> ',e )
+    
+      abort(422)
 
 
   '''
@@ -190,6 +247,21 @@ def create_app(test_config=None):
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+        "success": False, 
+        "error": 404,
+        "message": "Not found"
+        }), 404
+        
+  @app.errorhandler(422)
+  def unprocessable(error):
+    return jsonify({
+        "success": False, 
+        "error": 422,
+        "message": "This is unprocessable"
+        }), 422
   
   return app
 
