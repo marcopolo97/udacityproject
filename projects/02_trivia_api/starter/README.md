@@ -215,7 +215,8 @@ curl http://127.0.0.1:5000/questions
 
 General:
 
-- Deletes a question from the database as long as it exists in the database 
+- Deletes a question from the database as long as it exists
+- Returns the deleted question, as well as a new total of questions, along with 10 random questions. 
 
 Sample: 
 
@@ -223,6 +224,88 @@ Sample:
 curl -X DELETE -H "Content-Type: application/json" http://127.0.0.1:5000/questions/10
 
 ```
+Output:
+
+```json
+{
+  "deleted": 10,
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Muhammad Ali",
+      "category": 4,
+      "difficulty": 1,
+      "id": 9,
+      "question": "What boxer's original name is Cassius Clay?"
+    },
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    {
+      "answer": "Tom Cruise",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    },
+    {
+      "answer": "Uruguay",
+      "category": 6,
+      "difficulty": 4,
+      "id": 11,
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    },
+    {
+      "answer": "George Washington Carver",
+      "category": 4,
+      "difficulty": 2,
+      "id": 12,
+      "question": "Who invented Peanut Butter?"
+    },
+    {
+      "answer": "Lake Victoria",
+      "category": 3,
+      "difficulty": 2,
+      "id": 13,
+      "question": "What is the largest lake in Africa?"
+    },
+    {
+      "answer": "Agra",
+      "category": 3,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
+    },
+    {
+      "answer": "Escher",
+      "category": 2,
+      "difficulty": 1,
+      "id": 16,
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }
+  ],
+  "success": true,
+  "total_questions": 29
+}
+```
+
 #### POST /add
 
 General:
@@ -259,7 +342,49 @@ Sample:
 
 ```sh
 
-curl http://127.0.0.1:5000/categories/1/questions
+curl http://127.0.0.1:5000/categories/4/questions
+
+```
+
+Output:
+
+```json
+
+{
+  "current_category": "History",
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Muhammad Ali",
+      "category": 4,
+      "difficulty": 1,
+      "id": 9,
+      "question": "What boxer's original name is Cassius Clay?"
+    },
+    {
+      "answer": "George Washington Carver",
+      "category": 4,
+      "difficulty": 2,
+      "id": 12,
+      "question": "Who invented Peanut Butter?"
+    },
+    {
+      "answer": "Scarab",
+      "category": 4,
+      "difficulty": 4,
+      "id": 23,
+      "question": "Which dung beetle was worshipped by the ancient Egyptians?"
+    }
+  ],
+  "status": true,
+  "total_questions": 4
+}
 
 ```
 
@@ -268,12 +393,29 @@ curl http://127.0.0.1:5000/categories/1/questions
 General:
 
 - Starts the quiz game that will give users questions based on the category they choose. If they wish to recieve questions from all categories, they can select all 
-
+- Returns a question that was not asked already and is either from a specified category or from any of the categories
 Sample:
 
 ```sh
 
     curl -d '{"previous_questions":[], "quiz_category":{"type": "History", "id": "5"}}' -H 'Content-Type: application/json' -X POST http://127.0.0.1:5000/quizzes
+
+```
+
+Output:
+
+```json
+
+{
+  "question": {
+    "answer": "Apollo 13",
+    "category": 5,
+    "difficulty": 4,
+    "id": 2,
+    "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+  },
+  "success": true
+}
 
 ```
 
