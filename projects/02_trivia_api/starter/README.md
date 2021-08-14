@@ -50,3 +50,46 @@ By making notes ahead of time, you will practice the core skill of being able to
 
 
 >View the [README within ./frontend for more details.](./frontend/README.md)
+
+
+## API Documentation
+
+### Getting Started
+
+Base URL: This app can only be run locally. The backend to this app is hosted on the default, http://127.0.0.1:5000. This url is a proxy to the frontend configuration.
+
+For this application, there is no authetication.
+
+### Error Handling
+
+Errors are returned as JSON objects in the following format:
+
+```json
+{
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
+}
+```
+
+The API will return three error types when requests fail:
+
+400: Bad Request
+404: Resource Not Found
+422: Not Processable
+
+### Endpoints
+
+#### Get /categories
+
+General:
+
+- Returns a list of all the categories 
+
+Sample: 
+
+```
+curl http://127.0.0.1:5000/categories
+
+```
+
