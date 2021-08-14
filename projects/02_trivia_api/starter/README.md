@@ -311,6 +311,7 @@ Output:
 General:
 
 - Adds a question to the database. The question must have a category, question, answer, and difficulty
+- Returns the data passed to create a question
 
 Sample: 
 
