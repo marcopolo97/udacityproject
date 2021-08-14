@@ -211,7 +211,7 @@ curl http://127.0.0.1:5000/questions
   "total_questions": 30
 }
 ```
-#### Delete /questions/question_id
+#### Delete /questions/{question_id}
 
 General:
 
@@ -219,7 +219,7 @@ General:
 
 Sample: 
 
-```
+```sh
 curl -X DELETE -H "Content-Type: application/json" http://127.0.0.1:5000/questions/10
 
 ```
@@ -231,8 +231,53 @@ General:
 
 Sample: 
 
-```
+```sh
 curl -X POST -H "Content-Type: application/json" -d '{"question": "What color is the sky", "answer": "blue", "category": "3", "difficulty":"1"}' http://127.0.0.1:5000/questions
 
 
 ```
+#### POST /search
+
+General:
+
+- Allows you to search for a particular question
+
+Sample: 
+
+```sh
+    curl -X POST http://127.0.0.1:5000/questions/search -d '{"searchTerm":"Tom Hanks"}' -H "Content-Type: application/json" 
+
+```
+
+#### Get /categories/{id}/questions
+
+General: 
+
+- Returns all the questions related to a specific category
+
+Sample:
+
+```sh
+
+curl http://127.0.0.1:5000/categories/1/questions
+
+```
+
+#### POST /quizzes 
+
+General:
+
+- Starts the quiz game that will give users questions based on the category they choose. If they wish to recieve questions from all categories, they can select all 
+
+Sample:
+
+```sh
+
+    curl -d '{"previous_questions":[], "quiz_category":{"type": "History", "id": "5"}}' -H 'Content-Type: application/json' -X POST http://127.0.0.1:5000/quizzes
+
+```
+
+
+## Authors 
+
+Marcus Lofton, Udacity Full-stack team
