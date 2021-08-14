@@ -323,13 +323,33 @@ curl -X POST -H "Content-Type: application/json" -d '{"question": "What color is
 
 General:
 
-- Allows you to search for a particular question
+- Allows you to search for a particular question based on the words you type
+- Returns questions that match the string typed in the search
 
 Sample: 
 
 ```sh
-    curl -X POST http://127.0.0.1:5000/questions/search -d '{"searchTerm":"Tom Hanks"}' -H "Content-Type: application/json" 
+    curl -X POST http://127.0.0.1:5000/search -d '{"searchTerm":"Tom"}' -H "Content-Type: application/json"
 
+```
+
+Output:
+
+```json
+{
+  "current_category": null,
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    }
+  ],
+  "status": true,
+  "total_questions": 30
+}
 ```
 
 #### Get /categories/{id}/questions
