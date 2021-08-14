@@ -84,7 +84,7 @@ The API will return three error types when requests fail:
 
 General:
 
-- Returns a list of all the categories 
+- Returns a list of all the categories as well a success variable. 
 
 Sample: 
 
@@ -93,3 +93,146 @@ curl http://127.0.0.1:5000/categories
 
 ```
 
+Output
+
+```json
+
+{
+  "categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+  "success": true
+}
+
+```
+
+#### Get /questions
+
+General:
+
+- Returns the total number of questions, paginated to 10 questions per page. Also, returns the categories for the questions, reference to the current category(by default equals Null), and 10 random questions from the total number of questions. 
+
+Sample: 
+
+```
+curl http://127.0.0.1:5000/questions
+
+```
+
+```json
+{
+  "categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+  "current_category": null,
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Muhammad Ali",
+      "category": 4,
+      "difficulty": 1,
+      "id": 9,
+      "question": "What boxer's original name is Cassius Clay?"
+    },
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    {
+      "answer": "Tom Cruise",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    },
+    {
+      "answer": "Brazil",
+      "category": 6,
+      "difficulty": 3,
+      "id": 10,
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    },
+    {
+      "answer": "Uruguay",
+      "category": 6,
+      "difficulty": 4,
+      "id": 11,
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    },
+    {
+      "answer": "George Washington Carver",
+      "category": 4,
+      "difficulty": 2,
+      "id": 12,
+      "question": "Who invented Peanut Butter?"
+    },
+    {
+      "answer": "Lake Victoria",
+      "category": 3,
+      "difficulty": 2,
+      "id": 13,
+      "question": "What is the largest lake in Africa?"
+    },
+    {
+      "answer": "Agra",
+      "category": 3,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ],
+  "success": true,
+  "total_questions": 30
+}
+```
+#### Delete /questions/question_id
+
+General:
+
+- Deletes a question from the database as long as it exists in the database 
+
+Sample: 
+
+```
+curl -X DELETE -H "Content-Type: application/json" http://127.0.0.1:5000/questions/10
+
+```
+#### POST /add
+
+General:
+
+- Adds a question to the database. The question must have a category, question, answer, and difficulty
+
+Sample: 
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"question": "What color is the sky", "answer": "blue", "category": "3", "difficulty":"1"}' http://127.0.0.1:5000/questions
+
+
+```
