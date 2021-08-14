@@ -315,10 +315,23 @@ General:
 Sample: 
 
 ```sh
-curl -X POST -H "Content-Type: application/json" -d '{"question": "What color is the sky", "answer": "blue", "category": "3", "difficulty":"1"}' http://127.0.0.1:5000/questions
+curl -X POST -H "Content-Type: application/json" -d '{"question": "What color is the sky", "answer": "blue", "category": "3", "difficulty":"1"}' http://127.0.0.1:5000/add
 
 
 ```
+
+Output:
+
+```json
+{
+  "answer": "blue",
+  "category": "3",
+  "difficulty": "1",
+  "question": "What color is the sky",
+  "success": true
+}
+```
+
 #### POST /search
 
 General:
